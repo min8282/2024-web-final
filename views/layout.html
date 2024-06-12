@@ -1,26 +1,30 @@
 <!DOCTYPE html>
-<html lang="kor">
+<html>
 <head>
-  <meta charset="UTF-8">
   <title>{{ title }}</title>
-  <meta name="viewport" content="width=device-width, user-scalable=no">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <div class="container">
+  <header>
+    <div class="header-container">
+      <h1>좌방</h1>
+      <nav>
+        <a href="/favorites">관심목록</a>
+        <a href="/post/new">방 내놓기</a>
+        {% if user %}
+          <a href="/auth/logout">로그아웃</a>
+        {% else %}
+          <a href="/auth/login">로그인</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+  <main>
     {% block content %}
     {% endblock %}
-  </div>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <script>
-    window.onload = () => {
-      if (new URL(location.href).searchParams.get('loginError')) {
-        alert(new URL(location.href).searchParams.get('loginError'));
-      }
-    };
-  </script>
-  {% block script %}
-  {% endblock %}
+  </main>
+  <footer>
+    <p>&copy; 2024 좌방 - JWA방</p>
+  </footer>
 </body>
 </html>

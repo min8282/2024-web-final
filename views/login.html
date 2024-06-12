@@ -1,24 +1,24 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-  <div class="login-container">
+  <div class="auth-container">
     <h1>LOGIN</h1>
     <form action="/auth/login" method="post">
-      <div class="input-group">
+      <div class="form-group">
         <label for="email">이메일</label>
-        <input id="email" type="email" name="email" required>
+        <input type="email" id="email" name="email" required>
       </div>
-      <div class="input-group">
+      <div class="form-group">
         <label for="password">비밀번호</label>
-        <input id="password" type="password" name="password" required>
+        <input type="password" id="password" name="password" required>
       </div>
       <button type="submit" class="btn">로그인하기</button>
+      <div class="auth-links">
+        <a href="/auth/forgot-password">비밀번호 찾기</a>
+        <a href="/join">회원가입</a>
+      </div>
+      <p>or</p>
+      <a href="/auth/kakao" class="btn btn-kakao">카카오 로그인하기</a>
     </form>
-    <div class="links">
-      <a href="#">비밀번호 찾기</a>
-      <a href="/auth/join">회원가입</a>
-    </div>
-    <div class="separator">or</div>
-    <a href="/auth/kakao" class="btn kakao">카카오 로그인하기</a>
   </div>
 {% endblock %}

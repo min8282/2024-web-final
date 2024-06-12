@@ -2,18 +2,6 @@
 
 {% block content %}
   <div class="main-container">
-    <div class="header">
-      <h1>@직방</h1>
-      <div class="nav">
-        <a href="/favorites">관심목록</a>
-        <a href="/post/new">방 내놓기</a>
-        {% if user %}
-          <a href="/auth/logout">로그아웃</a>
-        {% else %}
-          <a href="/auth/login">로그인</a>
-        {% endif %}
-      </div>
-    </div>
     <div class="search-bar">
       <h2>어떤 집을 찾고 계세요?</h2>
       <form class="search-form" action="/search" method="get">

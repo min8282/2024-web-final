@@ -1,29 +1,29 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-  <div class="signup-container">
+  <div class="auth-container">
     <h1>SIGN UP</h1>
     <form action="/auth/join" method="post">
-      <div class="input-group">
+      <div class="form-group">
         <label for="nick">이름</label>
-        <input id="nick" type="text" name="nick" required>
+        <input type="text" id="nick" name="nick" required>
       </div>
-      <div class="input-group">
+      <div class="form-group">
         <label for="email">이메일</label>
-        <input id="email" type="email" name="email" required>
+        <input type="email" id="email" name="email" required>
       </div>
-      <div class="input-group">
+      <div class="form-group">
         <label for="password">비밀번호</label>
-        <input id="password" type="password" name="password" required>
+        <input type="password" id="password" name="password" required>
       </div>
-      <div class="input-group">
+      <div class="form-group">
         <label for="password2">비밀번호 확인</label>
-        <input id="password2" type="password" name="password2" required>
+        <input type="password" id="password2" name="password2" required>
       </div>
       <button type="submit" class="btn">회원가입하기</button>
+      <div class="auth-links">
+        이미 회원이신가요? <a href="/auth/login">로그인하기</a>
+      </div>
     </form>
-    <div class="links">
-      <a href="/auth/login">로그인하기</a>
-    </div>
   </div>
 {% endblock %}
