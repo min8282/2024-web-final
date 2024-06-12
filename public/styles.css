@@ -1,0 +1,292 @@
+/* Common Styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.input-group {
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+}
+
+.btn.kakao {
+  background-color: #ffeb00;
+  color: #3c1e1e;
+}
+
+.btn.kakao:hover {
+  background-color: #f7da00;
+}
+
+.login-container,
+.signup-container {
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.login-container h1,
+.signup-container h1 {
+  margin-bottom: 20px;
+}
+
+.links {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.separator {
+  margin: 20px 0;
+  text-align: center;
+  position: relative;
+}
+
+.separator::before,
+.separator::after {
+  content: '';
+  height: 1px;
+  width: 40%;
+  background: #ccc;
+  position: absolute;
+  top: 50%;
+}
+
+.separator::before {
+  left: 0;
+}
+
+.separator::after {
+  right: 0;
+}
+
+/* Specific Styles for Main Page */
+.main-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #ccc;
+}
+
+.header h1 {
+  margin: 0;
+}
+
+.nav a {
+  margin-left: 20px;
+  text-decoration: none;
+  color: #333;
+}
+
+/* Search Bar */
+.search-bar {
+  text-align: center;
+  margin: 40px 0;
+}
+
+.search-bar h2 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.search-form {
+  display: flex;
+  justify-content: center;
+}
+
+.search-form input {
+  width: 60%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px 0 0 5px;
+}
+
+.search-form button {
+  padding: 10px 20px;
+  background-color: orange;
+  border: none;
+  border-radius: 0 5px 5px 0;
+  color: white;
+  cursor: pointer;
+}
+
+.search-form button i {
+  font-size: 1.2em;
+}
+
+/* Posts */
+.posts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.post-card {
+  width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.post-card:hover {
+  transform: scale(1.05);
+}
+
+.post-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.post-content {
+  padding: 15px;
+}
+
+.post-content h3 {
+  margin: 0 0 10px;
+  font-size: 1.2em;
+}
+
+.post-content p {
+  margin: 5px 0;
+}
+
+/* Post Detail Container */
+.post-detail-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.post-detail-container .post-images {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.post-detail-container .post-image {
+  width: 100%;
+  max-width: 800px;
+  height: auto;
+  border-radius: 10px;
+}
+
+.post-detail-container .post-info {
+  text-align: left;
+}
+
+.post-detail-container h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.post-detail-container .info-section {
+  margin-bottom: 20px;
+}
+
+.post-detail-container h2 {
+  margin-bottom: 10px;
+}
+
+.post-detail-container p {
+  margin: 5px 0;
+}
+
+/* Post Container */
+.post-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.post-container h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.form-group small {
+  display: block;
+  margin-top: 5px;
+  color: #666;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  text-align: center;
+}

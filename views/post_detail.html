@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+  <div class="post-detail-container">
+    {% if imageUrls %}
+      <div class="post-images">
+        {% for imageUrl in imageUrls %}
+          <img src="{{ imageUrl }}" alt="{{ post.title }}" class="post-image">
+        {% endfor %}
+      </div>
+    {% endif %}
+    <div class="post-info">
+      <h1>{{ post.title }}</h1>
+      <div class="info-section">
+        <h2>가격정보</h2>
+        <p><strong>가격:</strong> {{ post.price }} 원</p>
+      </div>
+      <div class="info-section">
+        <h2>위치정보</h2>
+        <p>{{ post.location }}</p>
+      </div>
+      <div class="info-section">
+        <h2>상세설명</h2>
+        <p>{{ post.description }}</p>
+      </div>
+      <div class="info-section">
+        <h2>작성자 정보</h2>
+        <p>{{ post.User.nick }} ({{ post.User.email }})</p>
+      </div>
+      {% if user and user.id == post.UserId %}
+        <div class="actions">
+          <a href="/post/{{ post.id }}/edit" class="btn">수정</a>
+          <form action="/post/{{ post.id }}/delete" method="post" style="display:inline;">
+            <button type="submit" class="btn btn-danger">삭제</button>
+          </form>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

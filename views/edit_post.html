@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+  <div class="post-container">
+    <h1>게시글 수정</h1>
+    <form action="/post/{{ post.id }}/edit" method="post" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="title">제목 *</label>
+        <input type="text" id="title" name="title" value="{{ post.title }}" required>
+      </div>
+
+      <div class="form-group">
+        <label for="description">상세 설명 *</label>
+        <textarea id="description" name="description" required>{{ post.description }}</textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="price">가격 *</label>
+        <input type="number" id="price" name="price" value="{{ post.price }}" required>
+      </div>
+
+      <div class="form-group">
+        <label for="location">위치 *</label>
+        <input type="text" id="location" name="location" value="{{ post.location }}" required>
+      </div>
+
+      <div class="form-group">
+        <label for="images">사진 추가 (최대 15개)</label>
+        <input type="file" id="images" name="images" accept="image/*" multiple>
+        <div class="image-preview">
+          {% for imageUrl in imageUrls %}
+            <img src="{{ imageUrl }}" alt="{{ post.title }}" class="post-image">
+          {% endfor %}
+        </div>
+      </div>
+
+      <button type="submit" class="btn">수정 완료</button>
+    </form>
+  </div>
+{% endblock %}
