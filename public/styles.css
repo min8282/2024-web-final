@@ -46,8 +46,18 @@ header {
   margin: 0;
 }
 
+.header-container h1 a {
+  color: #000;
+  text-decoration: none;
+}
+
 header nav a {
   margin-left: 20px;
+  color: #000;
+}
+
+header nav a:hover {
+  color: #007bff;
 }
 
 /* Footer */
@@ -119,6 +129,11 @@ main {
 
 .auth-container .auth-links a {
   margin: 0 10px;
+  color: #007bff;
+}
+
+.auth-container .auth-links a:hover {
+  color: #0056b3;
 }
 
 .auth-container .btn-kakao {
@@ -162,7 +177,7 @@ main {
 
 .search-form button {
   padding: 10px 20px;
-  background-color: orange;
+  background-color: #ff7f50;
   border: none;
   border-radius: 0 5px 5px 0;
   color: white;
@@ -207,10 +222,12 @@ main {
 .post-content h3 {
   margin: 0 0 10px;
   font-size: 1.2em;
+  color: #000;
 }
 
 .post-content p {
   margin: 5px 0;
+  color: #333;
 }
 
 /* Post Detail Container */
