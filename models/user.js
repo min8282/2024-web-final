@@ -25,6 +25,10 @@ module.exports = class User extends Sequelize.Model {
         type: Sequelize.STRING(30),
         allowNull: true,
       },
+      contact: {
+        type: Sequelize.STRING(20), // 연락처 필드 추가
+        allowNull: true,
+      },
     }, {
       sequelize,
       timestamps: true,
