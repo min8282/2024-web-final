@@ -15,12 +15,25 @@
     {% for post in posts %}
       <div class="post-card">
         <a href="/post/{{ post.id }}">
-          <img class="post-image" src="{{ post.imageUrl[0] }}" alt="{{ post.title }}">
+          {% if post.imageUrl.length > 0 %}
+            <img src="{{ post.imageUrl[0] }}" alt="{{ post.title }}" class="post-image">
+          {% else %}
+            <img src="/default-image.jpg" alt="{{ post.title }}" class="post-image">
+          {% endif %}
           <div class="post-content">
             <h3>{{ post.title }}</h3>
             <p>{{ post.description }}</p>
           </div>
         </a>
+        {% if user %}
+          <button class="like-button {% if post.liked %}liked{% endif %}" data-post-id="{{ post.id }}">
+            {% if post.liked %}
+              좋아요 취소
+            {% else %}
+              좋아요
+            {% endif %}
+          </button>
+        {% endif %}
       </div>
     {% endfor %}
   </div>

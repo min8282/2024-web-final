@@ -1,16 +1,33 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-  <h1>관심목록</h1>
-  <div class="posts">
-    {% for post in posts %}
-      <div class="post-card">
-        <img src="{{ post.imageUrl[0] }}" alt="{{ post.title }}" class="post-image">
-        <div class="post-content">
-          <h3>{{ post.title }}</h3>
-          <p>{{ post.description }}</p>
+  <div class="main-container">
+    <h2>관심목록</h2>
+    <div class="posts">
+      {% for post in posts %}
+        <div class="post-card">
+          <a href="/post/{{ post.id }}">
+            {% if post.imageUrl.length > 0 %}
+              <img src="{{ post.imageUrl[0] }}" alt="{{ post.title }}" class="post-image">
+            {% else %}
+              <img src="/default-image.jpg" alt="{{ post.title }}" class="post-image">
+            {% endif %}
+            <div class="post-content">
+              <h3>{{ post.title }}</h3>
+              <p>{{ post.description }}</p>
+            </div>
+          </a>
+          {% if user %}
+            <button class="like-button {% if post.liked %}liked{% endif %}" data-post-id="{{ post.id }}">
+              {% if post.liked %}
+                좋아요 취소
+              {% else %}
+                좋아요
+              {% endif %}
+            </button>
+          {% endif %}
         </div>
-      </div>
-    {% endfor %}
+      {% endfor %}
+    </div>
   </div>
 {% endblock %}

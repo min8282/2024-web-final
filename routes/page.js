@@ -58,7 +58,18 @@ router.get('/mypage', isLoggedIn, async (req, res, next) => {
     const posts = await Post.findAll({
       where: { UserId: user.id },
     });
-    res.render('mypage', { title: '마이페이지', user, posts });
+
+    // 각 게시글의 좋아요 상태를 확인하여 템플릿으로 전달
+    const postsWithLikes = await Promise.all(posts.map(async post => {
+      const liked = req.user ? await Like.findOne({ where: { UserId: req.user.id, PostId: post.id } }) : null;
+      return {
+        ...post.get({ plain: true }),
+        imageUrl: post.imageUrl ? JSON.parse(post.imageUrl) : [],
+        liked: !!liked,
+      };
+    }));
+
+    res.render('mypage', { title: '마이페이지', user, posts: postsWithLikes });
   } catch (error) {
     console.error(error);
     next(error);
@@ -107,9 +118,20 @@ router.get('/favorites', isLoggedIn, async (req, res, next) => {
         as: 'LikedPosts',
       }],
     });
+
+    // 각 게시글의 이미지 URL을 파싱하고 좋아요 상태를 확인하여 템플릿으로 전달
+    const postsWithLikes = await Promise.all(user.LikedPosts.map(async post => {
+      const liked = req.user ? await Like.findOne({ where: { UserId: req.user.id, PostId: post.id } }) : null;
+      return {
+        ...post.get({ plain: true }),
+        imageUrl: post.imageUrl ? JSON.parse(post.imageUrl) : [],
+        liked: !!liked,
+      };
+    }));
+
     res.render('favorites', {
       title: '관심목록',
-      posts: user.LikedPosts,
+      posts: postsWithLikes,
     });
   } catch (error) {
     console.error(error);
