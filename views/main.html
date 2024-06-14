@@ -23,8 +23,59 @@
               <p>{{ post.description }}</p>
             </div>
           </a>
+          {% if user %}
+            <button class="like-button {% if post.liked %}liked{% endif %}" data-post-id="{{ post.id }}">
+              {% if post.liked %}
+                좋아요 취소
+              {% else %}
+                좋아요
+              {% endif %}
+            </button>
+          {% endif %}
         </div>
       {% endfor %}
     </div>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const likeButtons = document.querySelectorAll('.like-button');
+      likeButtons.forEach(button => {
+        button.addEventListener('click', async () => {
+          if (button.disabled) return; // Prevent multiple clicks
+          button.disabled = true; // Disable button to prevent multiple clicks
+
+          const postId = button.dataset.postId;
+          const isLiked = button.classList.contains('liked');
+
+          try {
+            let response;
+            if (isLiked) {
+              response = await fetch(`/post/${postId}/unlike`, { method: 'DELETE' });
+              if (response.ok) {
+                button.classList.remove('liked');
+                button.textContent = '좋아요';
+              } else {
+                const error = await response.json();
+                alert(error.message);
+              }
+            } else {
+              response = await fetch(`/post/${postId}/like`, { method: 'POST' });
+              if (response.ok) {
+                button.classList.add('liked');
+                button.textContent = '좋아요 취소';
+              } else {
+                const error = await response.json();
+                alert(error.message);
+              }
+            }
+          } catch (error) {
+            console.error(error);
+          } finally {
+            button.disabled = false; // Re-enable button
+          }
+        });
+      });
+    });
+  </script>
 {% endblock %}

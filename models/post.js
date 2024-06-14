@@ -1,41 +1,10 @@
-// const Sequelize = require('sequelize');
-
-// class Post extends Sequelize.Model {
-//   static init(sequelize) {
-//     const postAttr = {
-//       content: {
-//         type: Sequelize.STRING(140),
-//         allowNull: false,
-//       },
-//     };
-
-//     const postTbl = {
-//       sequelize,
-//       timestamps: true,
-//       underscored: false,
-//       modelName: 'Post',
-//       tableName: 'posts',
-//       paranoid: false,
-//       charset: 'utf8mb4',
-//       collate: 'utf8mb4_general_ci',
-//     };
-
-//     return super.init(postAttr, postTbl);
-//   }
-
-//   static associate(db) {
-//     db.Post.belongsTo(db.User);
-//   }
-// }
-
-// module.exports = Post;
 const Sequelize = require('sequelize');
 
-class Post extends Sequelize.Model {
+module.exports = class Post extends Sequelize.Model {
   static init(sequelize) {
-    const postAttr = {
+    return super.init({
       title: {
-        type: Sequelize.STRING(255),
+        type: Sequelize.STRING(100),
         allowNull: false,
       },
       description: {
@@ -43,36 +12,30 @@ class Post extends Sequelize.Model {
         allowNull: false,
       },
       price: {
-        type: Sequelize.DECIMAL(10, 2),
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
       location: {
-        type: Sequelize.STRING(255),
+        type: Sequelize.STRING(100),
         allowNull: false,
       },
       imageUrl: {
-        type: Sequelize.STRING(255),
+        type: Sequelize.TEXT,
         allowNull: true,
-      }
-    };
-
-    const postTbl = {
+      },
+    }, {
       sequelize,
       timestamps: true,
-      underscored: false,
+      paranoid: true,
       modelName: 'Post',
       tableName: 'posts',
-      paranoid: false,
-      charset: 'utf8mb4',
-      collate: 'utf8mb4_general_ci',
-    };
-
-    return super.init(postAttr, postTbl);
+      charset: 'utf8',
+      collate: 'utf8_general_ci',
+    });
   }
 
   static associate(db) {
     db.Post.belongsTo(db.User);
+    db.Post.belongsToMany(db.User, { through: 'Like', as: 'LikedBy', foreignKey: 'PostId' });
   }
-}
-
-module.exports = Post;
+};

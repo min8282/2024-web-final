@@ -15,18 +15,18 @@ document.addEventListener("DOMContentLoaded", function() {
                         <span class="close">&times;</span>
                         <h2>Contact Information</h2>
                         <p>Name: ${data.nick}</p>
-                        <p>Phone: ${data.phone}</p>
+                        <p>Phone: ${data.contact}</p>
                     `;
                     modal.style.display = "block";
 
                     var close = document.querySelector(".close");
                     close.onclick = function() {
-                        modal.style.display = "none";
+                        modal.style.display = 'none';
                     }
 
                     window.onclick = function(event) {
                         if (event.target == modal) {
-                            modal.style.display = "none";
+                            modal.style.display = 'none';
                         }
                     }
                 })
@@ -54,4 +54,43 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         });
     }
+
+    // Like button logic
+    const likeButtons = document.querySelectorAll('.like-button');
+    likeButtons.forEach(button => {
+        button.addEventListener('click', async () => {
+            if (button.disabled) return; // Prevent multiple clicks
+            button.disabled = true; // Disable button to prevent multiple clicks
+
+            const postId = button.dataset.postId;
+            const isLiked = button.classList.contains('liked');
+
+            try {
+                let response;
+                if (isLiked) {
+                    response = await fetch(`/post/${postId}/unlike`, { method: 'DELETE' });
+                    if (response.ok) {
+                        button.classList.remove('liked');
+                        button.textContent = '좋아요';
+                    } else {
+                        const error = await response.json();
+                        alert(error.message);
+                    }
+                } else {
+                    response = await fetch(`/post/${postId}/like`, { method: 'POST' });
+                    if (response.ok) {
+                        button.classList.add('liked');
+                        button.textContent = '좋아요 취소';
+                    } else {
+                        const error = await response.json();
+                        alert(error.message);
+                    }
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
+                button.disabled = false; // Re-enable button
+            }
+        });
+    });
 });

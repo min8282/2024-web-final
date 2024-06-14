@@ -26,7 +26,7 @@ module.exports = class User extends Sequelize.Model {
         allowNull: true,
       },
       contact: {
-        type: Sequelize.STRING(20), // 연락처 필드 추가
+        type: Sequelize.STRING(15),
         allowNull: true,
       },
     }, {
@@ -42,5 +42,6 @@ module.exports = class User extends Sequelize.Model {
 
   static associate(db) {
     db.User.hasMany(db.Post);
+    db.User.belongsToMany(db.Post, { through: 'Like', as: 'LikedPosts', foreignKey: 'UserId' });
   }
 };

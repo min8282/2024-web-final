@@ -19,6 +19,16 @@
     <p>{{ post.User.nick }}</p>
     <button id="show-contact">연락처 보기</button>
 
+    {% if user %}
+      <button class="like-button {% if liked %}liked{% endif %}" data-post-id="{{ post.id }}">
+        {% if liked %}
+          좋아요 취소
+        {% else %}
+          좋아요
+        {% endif %}
+      </button>
+    {% endif %}
+
     {% if user and user.id == post.UserId %}
       <div class="post-actions">
         <a href="/post/{{ post.id }}/edit" class="btn">수정하기</a>
@@ -35,8 +45,8 @@
   <div class="modal-content">
     <span class="close">&times;</span>
     <h2>연락처 정보</h2>
-    <p>이름: {{ post.User.nick }}</p>
-    <p>연락처: {{ post.User.contact }}</p>
+    <p id="contact-nick">이름: {{ post.User.nick }}</p>
+    <p id="contact-phone">연락처: {{ post.User.contact }}</p>
   </div>
 </div>
 
@@ -54,5 +64,45 @@
       document.getElementById('contact-modal').style.display = 'none';
     }
   };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const likeButton = document.querySelector('.like-button');
+    if (likeButton) {
+      likeButton.addEventListener('click', async () => {
+        if (likeButton.disabled) return; // Prevent multiple clicks
+        likeButton.disabled = true; // Disable button to prevent multiple clicks
+
+        const postId = likeButton.dataset.postId;
+        const isLiked = likeButton.classList.contains('liked');
+
+        try {
+          let response;
+          if (isLiked) {
+            response = await fetch(`/post/${postId}/unlike`, { method: 'DELETE' });
+            if (response.ok) {
+              likeButton.classList.remove('liked');
+              likeButton.textContent = '좋아요';
+            } else {
+              const error = await response.json();
+              alert(error.message);
+            }
+          } else {
+            response = await fetch(`/post/${postId}/like`, { method: 'POST' });
+            if (response.ok) {
+              likeButton.classList.add('liked');
+              likeButton.textContent = '좋아요 취소';
+            } else {
+              const error = await response.json();
+              alert(error.message);
+            }
+          }
+        } catch (error) {
+          console.error(error);
+        } finally {
+          likeButton.disabled = false; // Re-enable button
+        }
+      });
+    }
+  });
 </script>
 {% endblock %}

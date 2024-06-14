@@ -3,6 +3,7 @@
 <head>
   <title>{{ title }}</title>
   <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
   <header>
@@ -11,9 +12,9 @@
       <nav>
         <a href="/favorites">관심목록</a>
         <a href="/post/new">방 내놓기</a>
-        <a href="/mypage">마이페이지</a>
         {% if user %}
           <a href="/auth/logout">로그아웃</a>
+          <a href="/mypage">마이페이지</a>
         {% else %}
           <a href="/auth/login">로그인</a>
         {% endif %}
@@ -24,10 +25,47 @@
     {% block content %}
     {% endblock %}
   </main>
-  <script src="/script.js"></script>
-
   <footer>
     <p>&copy; 2024 좌방 - 방을 잡아!</p>
   </footer>
+  <script src="/script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.like-button').forEach(button => {
+        button.addEventListener('click', async function() {
+          const postId = this.dataset.postId;
+          const icon = this.querySelector('i');
+
+          try {
+            const response = await fetch(`/post/${postId}/like`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ _csrf: '{{ csrfToken }}' })
+            });
+
+            if (response.ok) {
+              const result = await response.json();
+              if (result.liked) {
+                icon.classList.remove('fa-heart-o');
+                icon.classList.add('fa-heart');
+                icon.classList.add('liked');
+              } else {
+                icon.classList.remove('fa-heart');
+                icon.classList.remove('liked');
+                icon.classList.add('fa-heart-o');
+              }
+            } else {
+              alert('좋아요 처리에 실패했습니다.');
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            alert('좋아요 처리 중 오류가 발생했습니다.');
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html>

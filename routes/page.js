@@ -1,6 +1,6 @@
 const express = require('express');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
-const { Post, User, Hashtag } = require('../models');
+const { Post, User, Like } = require('../models');
 
 const router = express.Router();
 
@@ -31,52 +31,23 @@ router.get('/', async (req, res, next) => {
       order: [['createdAt', 'DESC']],
     });
 
-    // 이미지 URL을 파싱하여 템플릿으로 전달
-    const postsWithParsedImages = posts.map(post => {
+    // 각 게시글의 좋아요 상태를 확인하여 템플릿으로 전달
+    const postsWithLikes = await Promise.all(posts.map(async post => {
+      const liked = req.user ? await Like.findOne({ where: { UserId: req.user.id, PostId: post.id } }) : null;
       return {
         ...post.get({ plain: true }),
         imageUrl: post.imageUrl ? JSON.parse(post.imageUrl) : [],
+        liked: !!liked,
       };
-    });
+    }));
 
     res.render('main', {
       title: 'NodeBird',
-      posts: postsWithParsedImages,
+      posts: postsWithLikes,
     });
   } catch (err) {
     console.error(err);
     next(err);
-  }
-});
-
-// 추가: 해시태그 검색 결과 라우터
-router.get('/hashtag', async (req, res, next) => {
-  const query = req.query.hashtag;
-  if (!query) {
-    return res.redirect('/');
-  }
-  try {
-    const hashtag = await Hashtag.findOne({ where: { title: query } });
-    let posts = [];
-    if (hashtag) {
-      posts = await hashtag.getPosts({ include: [{ model: User }] });
-    }
-
-    // 이미지 URL을 파싱하여 템플릿으로 전달
-    const postsWithParsedImages = posts.map(post => {
-      return {
-        ...post.get({ plain: true }),
-        imageUrl: post.imageUrl ? JSON.parse(post.imageUrl) : [],
-      };
-    });
-
-    return res.render('main', {
-      title: `${query} | NodeBird`,
-      posts: postsWithParsedImages,
-    });
-  } catch (error) {
-    console.error(error);
-    return next(error);
   }
 });
 
@@ -119,6 +90,26 @@ router.post('/delete', isLoggedIn, async (req, res, next) => {
     req.logout(() => {
       req.session.destroy();
       res.redirect('/');
+    });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+// 관심 목록 페이지
+router.get('/favorites', isLoggedIn, async (req, res, next) => {
+  try {
+    const user = await User.findOne({
+      where: { id: req.user.id },
+      include: [{
+        model: Post,
+        as: 'LikedPosts',
+      }],
+    });
+    res.render('favorites', {
+      title: '관심목록',
+      posts: user.LikedPosts,
     });
   } catch (error) {
     console.error(error);

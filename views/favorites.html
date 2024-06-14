@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+  <h1>관심목록</h1>
+  <div class="posts">
+    {% for post in posts %}
+      <div class="post-card">
+        <img src="{{ post.imageUrl[0] }}" alt="{{ post.title }}" class="post-image">
+        <div class="post-content">
+          <h3>{{ post.title }}</h3>
+          <p>{{ post.description }}</p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}
