@@ -21,4 +21,11 @@
       <a href="/auth/kakao" class="btn btn-kakao">카카오 로그인하기</a>
     </form>
   </div>
+  <script>
+    // 로그인 에러 메시지 처리
+    var loginError = "{{ loginError }}";
+    if (loginError) {
+      alert(loginError);
+    }
+  </script>
 {% endblock %}

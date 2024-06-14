@@ -14,7 +14,8 @@ router.get('/join', isNotLoggedIn, (req, res) => {
 
 // 로그인 페이지 라우터
 router.get('/login', isNotLoggedIn, (req, res) => {
-  res.render('login', { title: '로그인' });
+  const { loginError } = req.query;
+  res.render('login', { title: '로그인', loginError });
 });
 
 // 회원가입 처리
@@ -47,7 +48,7 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
       return next(authError);
     }
     if (!user) {
-      return res.redirect(`/?loginError=${info.message}`);
+      return res.redirect(`/auth/login?loginError=${info.message}`);
     }
     return req.login(user, (loginError) => {
       if (loginError) {
