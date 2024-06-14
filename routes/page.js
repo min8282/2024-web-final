@@ -1,59 +1,3 @@
-// const express = require('express');
-// const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
-// const { Post, User } = require('../models');
-
-// const router = express.Router();
-
-// router.use((req, res, next) => {
-//   // Ensure req.user is defined before accessing its properties
-//   res.locals.user = req.user;
-//   res.locals.followerCount = req.user && req.user.Followers ? req.user.Followers.length : 0;
-//   res.locals.followingCount = req.user && req.user.Followings ? req.user.Followings.length : 0;
-//   res.locals.followerIdList = req.user && req.user.Followings ? req.user.Followings.map(f => f.id) : [];
-//   next();
-// });
-
-// router.get('/profile', isLoggedIn, (req, res) => {
-//   res.render('profile', { title: '내 정보 - NodeBird' });
-// });
-
-// router.get('/join', isNotLoggedIn, (req, res) => {
-//   res.render('join', { title: '회원가입 - NodeBird' });
-// });
-
-// router.get('/', async (req, res, next) => {
-//   try {
-//     const posts = await Post.findAll({
-//       include: {
-//         model: User,
-//         attributes: ['id', 'nick'],
-//       },
-//       order: [['createdAt', 'DESC']],
-//     });
-
-//     // 이미지 URL을 파싱하여 템플릿으로 전달
-//     const postsWithParsedImages = posts.map(post => {
-//       return {
-//         ...post.get({ plain: true }),
-//         imageUrl: post.imageUrl ? JSON.parse(post.imageUrl) : [],
-//       };
-//     });
-
-//     res.render('main', {
-//       title: 'NodeBird',
-//       twits: [],
-//       user: req.user,
-//       posts: postsWithParsedImages,
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     next(error);
-//   }
-// });
-
-// module.exports = router;
-
-
 const express = require('express');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const { Post, User } = require('../models');
@@ -137,6 +81,20 @@ router.get('/hashtag', async (req, res, next) => {
   } catch (error) {
     console.error(error);
     return next(error);
+  }
+});
+
+// 마이페이지 이동 라우터
+router.get('/mypage', isLoggedIn, async (req, res, next) => {
+  try {
+    const user = await User.findOne({ where: { id: req.user.id } });
+    const posts = await Post.findAll({
+      where: { UserId: user.id },
+    });
+    res.render('mypage', { title: '마이페이지', user, posts });
+  } catch (error) {
+    console.error(error);
+    next(error);
   }
 });
 

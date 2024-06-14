@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="mypage-container">
+  <h1>{{ user.nick }}님의 마이페이지</h1>
+  <div class="user-actions">
+    <button onclick="location.href='/auth/edit'">내 정보 수정하기</button>
+    <button onclick="location.href='/auth/delete'">탈퇴하기</button>
+  </div>
+  <hr>
+  <h2>내가 작성한 게시글</h2>
+  <div class="posts">
+    {% for post in posts %}
+      <div class="post-card">
+        <img class="post-image" src="{{ post.imageUrl[0] }}" alt="{{ post.title }}">
+        <div class="post-content">
+          <h3>{{ post.title }}</h3>
+          <p>{{ post.description }}</p>
+          <a href="/post/{{ post.id }}">게시글 보기</a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
