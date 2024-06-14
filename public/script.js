@@ -33,4 +33,25 @@ document.addEventListener("DOMContentLoaded", function() {
                 .catch(error => console.error('Error:', error));
         });
     });
+
+    const editProfileForm = document.querySelector('#edit-profile-form');
+    if (editProfileForm) {
+        editProfileForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const formData = new FormData(editProfileForm);
+            fetch(editProfileForm.action, {
+                method: editProfileForm.method,
+                body: formData,
+            })
+            .then((response) => response.text())
+            .then((data) => {
+                alert('수정이 완료되었습니다.');
+                window.location.href = '/mypage';
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('수정 중 오류가 발생했습니다.');
+            });
+        });
+    }
 });

@@ -1,16 +1,12 @@
 const express = require('express');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
-const { Post, User } = require('../models');
+const { Post, User, Hashtag } = require('../models');
 
 const router = express.Router();
 
 // req.user의 사용자 데이터를 넌적스 템플릿에서 이용가능하도록 res.locals에 저장
 router.use((req, res, next) => {
   res.locals.user = req.user;
-  // 추가: 팔로워, 팔로잉 수 및 팔로잉 ID 목록을 저장
-  res.locals.followerCount = req.user?.Followers?.length || 0;
-  res.locals.followingCount = req.user?.Followings?.length || 0;
-  res.locals.followingIdList = req.user?.Followings?.map((f) => f.id) || [];
   next();
 });
 
@@ -98,6 +94,36 @@ router.get('/mypage', isLoggedIn, async (req, res, next) => {
   }
 });
 
-module.exports = router;
+// 사용자 정보 수정 페이지 라우터
+router.get('/edit', isLoggedIn, (req, res) => {
+  res.render('edit_profile', { title: '내 정보 수정' });
+});
 
-///
+// 사용자 정보 수정 처리
+router.post('/edit', isLoggedIn, async (req, res, next) => {
+  const { nick, contact } = req.body;
+  try {
+    await User.update({ nick, contact }, { where: { id: req.user.id } });
+    res.redirect('/mypage');
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+// 사용자 탈퇴 처리
+router.post('/delete', isLoggedIn, async (req, res, next) => {
+  try {
+    await Post.destroy({ where: { UserId: req.user.id } }); // 사용자의 모든 게시글 삭제
+    await User.destroy({ where: { id: req.user.id } }); // 사용자 삭제
+    req.logout(() => {
+      req.session.destroy();
+      res.redirect('/');
+    });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+module.exports = router;

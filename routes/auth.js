@@ -3,6 +3,7 @@ const passport = require('passport');
 const bcrypt = require('bcrypt');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const User = require('../models/user');
+const Post = require('../models/post');
 
 const router = express.Router();
 
@@ -18,7 +19,7 @@ router.get('/login', isNotLoggedIn, (req, res) => {
 
 // 회원가입 처리
 router.post('/join', isNotLoggedIn, async (req, res, next) => {
-  const { email, nick, password, contact } = req.body; // contact 추가
+  const { email, nick, password, contact } = req.body;
   try {
     const exUser = await User.findOne({ where: { email } });
     if (exUser) {
@@ -29,7 +30,7 @@ router.post('/join', isNotLoggedIn, async (req, res, next) => {
       email,
       nick,
       password: hash,
-      contact, // contact 저장
+      contact,
     });
     return res.redirect('/');
   } catch (error) {
@@ -64,6 +65,38 @@ router.get('/logout', isLoggedIn, (req, res) => {
     req.session.destroy();
     res.redirect('/');
   });
+});
+
+// 사용자 정보 수정 페이지 라우터
+router.get('/edit', isLoggedIn, (req, res) => {
+  res.render('edit_profile', { title: '내 정보 수정' });
+});
+
+// 사용자 정보 수정 처리
+router.post('/edit', isLoggedIn, async (req, res, next) => {
+  const { nick, contact } = req.body;
+  try {
+    await User.update({ nick, contact }, { where: { id: req.user.id } });
+    res.redirect('/mypage');
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+// 사용자 탈퇴 처리
+router.post('/delete', isLoggedIn, async (req, res, next) => {
+  try {
+    await Post.destroy({ where: { UserId: req.user.id } }); // 사용자의 모든 게시글 삭제
+    await User.destroy({ where: { id: req.user.id } }); // 사용자 삭제
+    req.logout(() => {
+      req.session.destroy();
+      res.redirect('/');
+    });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
 });
 
 module.exports = router;
