@@ -71,7 +71,7 @@ router.get('/:id', async (req, res, next) => {
       where: { id: req.params.id },
       include: {
         model: User,
-        attributes: ['id', 'nick', 'email'],
+        attributes: ['nick', 'contact'], // nick과 contact 정보 포함
       },
     });
 
@@ -83,6 +83,7 @@ router.get('/:id', async (req, res, next) => {
       title: post.title,
       post,
       imageUrls: JSON.parse(post.imageUrl),
+      user: req.user, // 현재 로그인한 사용자 정보 전달
     });
   } catch (error) {
     console.error(error);

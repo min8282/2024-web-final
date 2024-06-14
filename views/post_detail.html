@@ -1,40 +1,58 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-  <div class="post-detail-container">
-    {% if imageUrls %}
-      <div class="post-images">
-        {% for imageUrl in imageUrls %}
-          <img src="{{ imageUrl }}" alt="{{ post.title }}" class="post-image">
-        {% endfor %}
+<div class="post-detail-container">
+  <h1>{{ post.title }}</h1>
+  <div class="post-images">
+    {% for imageUrl in imageUrls %}
+      <img src="{{ imageUrl }}" class="post-image" alt="{{ post.title }}">
+    {% endfor %}
+  </div>
+  <div class="post-info">
+    <h2>가격정보</h2>
+    <p>가격: {{ post.price }}</p>
+    <h2>위치정보</h2>
+    <p>{{ post.location }}</p>
+    <h2>상세설명</h2>
+    <p>{{ post.description }}</p>
+    <h2>작성자 정보</h2>
+    <p>{{ post.User.nick }}</p>
+    <button id="show-contact">연락처 보기</button>
+
+    {% if user and user.id == post.UserId %}
+      <div class="post-actions">
+        <a href="/post/{{ post.id }}/edit" class="btn">수정하기</a>
+        <form action="/post/{{ post.id }}/delete" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+          <button type="submit" class="btn">삭제하기</button>
+        </form>
       </div>
     {% endif %}
-    <div class="post-info">
-      <h1>{{ post.title }}</h1>
-      <div class="info-section">
-        <h2>가격정보</h2>
-        <p><strong>가격:</strong> {{ post.price }} 원</p>
-      </div>
-      <div class="info-section">
-        <h2>위치정보</h2>
-        <p>{{ post.location }}</p>
-      </div>
-      <div class="info-section">
-        <h2>상세설명</h2>
-        <p>{{ post.description }}</p>
-      </div>
-      <div class="info-section">
-        <h2>작성자 정보</h2>
-        <p>{{ post.User.nick }} ({{ post.User.email }})</p>
-      </div>
-      {% if user and user.id == post.UserId %}
-        <div class="actions">
-          <a href="/post/{{ post.id }}/edit" class="btn">수정</a>
-          <form action="/post/{{ post.id }}/delete" method="post" style="display:inline;">
-            <button type="submit" class="btn btn-danger">삭제</button>
-          </form>
-        </div>
-      {% endif %}
-    </div>
   </div>
+</div>
+
+<!-- 연락처 보기 모달 -->
+<div id="contact-modal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>연락처 정보</h2>
+    <p>이름: {{ post.User.nick }}</p>
+    <p>연락처: {{ post.User.contact }}</p>
+  </div>
+</div>
+
+<script>
+  document.getElementById('show-contact').onclick = function() {
+    document.getElementById('contact-modal').style.display = 'block';
+  };
+
+  document.querySelector('.close').onclick = function() {
+    document.getElementById('contact-modal').style.display = 'none';
+  };
+
+  window.onclick = function(event) {
+    if (event.target == document.getElementById('contact-modal')) {
+      document.getElementById('contact-modal').style.display = 'none';
+    }
+  };
+</script>
 {% endblock %}
