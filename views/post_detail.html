@@ -17,7 +17,7 @@
     <p>{{ post.description }}</p>
     <h2>작성자 정보</h2>
     <p>{{ post.User.nick }}</p>
-    <button id="show-contact">연락처 보기</button>
+    <button class="contact-btn" data-user-id="{{ post.User.id }}">연락처 보기</button>
 
     {% if user %}
       <button class="like-button {% if liked %}liked{% endif %}" data-post-id="{{ post.id }}">
@@ -45,8 +45,8 @@
   <div class="modal-content">
     <span class="close">&times;</span>
     <h2>연락처 정보</h2>
-    <p id="contact-nick">이름: {{ post.User.nick }}</p>
-    <p id="contact-phone">연락처: {{ post.User.contact }}</p>
+    <p id="contact-nick">이름: </p>
+    <p id="contact-phone">연락처: </p>
   </div>
 </div>
 {% endblock %}

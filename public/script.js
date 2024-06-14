@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
     // 연락처 보기 모달
     var contactButtons = document.querySelectorAll(".contact-btn");
-    var modal = document.querySelector("#contactModal");
+    var modal = document.querySelector("#contact-modal");
     var modalContent = document.querySelector(".modal-content");
     var closeModal = document.querySelector(".close");
 
@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         button.textContent = '좋아요';
                         // 관심목록 페이지에서 좋아요 취소 후 게시글 제거
                         const postCard = document.querySelector(`.post-card[data-post-id="${postId}"]`);
-                        if (postCard) {
+                        if (postCard && window.location.pathname === '/favorites') {
                             postCard.remove();
                         }
                     } else {

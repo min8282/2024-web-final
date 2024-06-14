@@ -100,4 +100,15 @@ router.post('/delete', isLoggedIn, async (req, res, next) => {
   }
 });
 
+// 카카오 로그인 라우터
+router.get('/kakao', passport.authenticate('kakao'));
+
+// 카카오 로그인 콜백 라우터
+router.get('/kakao/callback', passport.authenticate('kakao', {
+  failureRedirect: '/login',
+}), (req, res) => {
+  res.redirect('/');
+});
+
+
 module.exports = router;
