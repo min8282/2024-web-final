@@ -29,43 +29,5 @@
     <p>&copy; 2024 좌방 - 방을 잡아!</p>
   </footer>
   <script src="/script.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      document.querySelectorAll('.like-button').forEach(button => {
-        button.addEventListener('click', async function() {
-          const postId = this.dataset.postId;
-          const icon = this.querySelector('i');
-
-          try {
-            const response = await fetch(`/post/${postId}/like`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ _csrf: '{{ csrfToken }}' })
-            });
-
-            if (response.ok) {
-              const result = await response.json();
-              if (result.liked) {
-                icon.classList.remove('fa-heart-o');
-                icon.classList.add('fa-heart');
-                icon.classList.add('liked');
-              } else {
-                icon.classList.remove('fa-heart');
-                icon.classList.remove('liked');
-                icon.classList.add('fa-heart-o');
-              }
-            } else {
-              alert('좋아요 처리에 실패했습니다.');
-            }
-          } catch (error) {
-            console.error('Error:', error);
-            alert('좋아요 처리 중 오류가 발생했습니다.');
-          }
-        });
-      });
-    });
-  </script>
 </body>
 </html>

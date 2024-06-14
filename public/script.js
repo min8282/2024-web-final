@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
+    // 연락처 보기 모달
     var contactButtons = document.querySelectorAll(".contact-btn");
     var modal = document.querySelector("#contactModal");
     var modalContent = document.querySelector(".modal-content");
@@ -21,12 +22,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
                     var close = document.querySelector(".close");
                     close.onclick = function() {
-                        modal.style.display = 'none';
+                        modal.style.display = "none";
                     }
 
                     window.onclick = function(event) {
                         if (event.target == modal) {
-                            modal.style.display = 'none';
+                            modal.style.display = "none";
                         }
                     }
                 })
@@ -34,6 +35,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
+    // 프로필 수정 폼 제출
     const editProfileForm = document.querySelector('#edit-profile-form');
     if (editProfileForm) {
         editProfileForm.addEventListener('submit', (event) => {
@@ -73,8 +75,8 @@ document.addEventListener("DOMContentLoaded", function() {
                         button.classList.remove('liked');
                         button.textContent = '좋아요';
                     } else {
-                        const error = await response.json();
-                        alert(error.message);
+                        const errorData = await response.json();
+                        alert(errorData.message || '좋아요 취소 처리에 실패했습니다.');
                     }
                 } else {
                     response = await fetch(`/post/${postId}/like`, { method: 'POST' });
@@ -82,12 +84,13 @@ document.addEventListener("DOMContentLoaded", function() {
                         button.classList.add('liked');
                         button.textContent = '좋아요 취소';
                     } else {
-                        const error = await response.json();
-                        alert(error.message);
+                        const errorData = await response.json();
+                        alert(errorData.message || '좋아요 처리에 실패했습니다.');
                     }
                 }
             } catch (error) {
-                console.error(error);
+                console.error('Error:', error);
+                alert('좋아요 처리 중 오류가 발생했습니다.');
             } finally {
                 button.disabled = false; // Re-enable button
             }

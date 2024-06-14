@@ -40,6 +40,10 @@ app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public'))); // 정적 파일 제공 설정
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // uploads 폴더 정적 파일로 제공
 
+//
+app.use('/js', express.static(path.join(__dirname, 'public/js'))); // script.js를 포함한 폴더 경로 설정
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
