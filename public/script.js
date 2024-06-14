@@ -1,38 +1,25 @@
 document.addEventListener("DOMContentLoaded", function() {
     // 연락처 보기 모달
-    var contactButtons = document.querySelectorAll(".contact-btn");
-    var modal = document.querySelector("#contactModal");
-    var modalContent = document.querySelector(".modal-content");
+    var showContactButton = document.querySelector("#show-contact");
+    var modal = document.querySelector("#contact-modal");
     var closeModal = document.querySelector(".close");
 
-    contactButtons.forEach(function(button) {
-        button.addEventListener("click", function() {
-            var userId = this.dataset.userId;
-
-            fetch(`/users/${userId}/contact`)
-                .then(response => response.json())
-                .then(data => {
-                    modalContent.innerHTML = `
-                        <span class="close">&times;</span>
-                        <h2>Contact Information</h2>
-                        <p>Name: ${data.nick}</p>
-                        <p>Phone: ${data.contact}</p>
-                    `;
-                    modal.style.display = "block";
-
-                    var close = document.querySelector(".close");
-                    close.onclick = function() {
-                        modal.style.display = "none";
-                    }
-
-                    window.onclick = function(event) {
-                        if (event.target == modal) {
-                            modal.style.display = "none";
-                        }
-                    }
-                })
-                .catch(error => console.error('Error:', error));
+    if (showContactButton) {
+        showContactButton.addEventListener("click", function() {
+            modal.style.display = "block";
         });
+    }
+
+    if (closeModal) {
+        closeModal.addEventListener("click", function() {
+            modal.style.display = "none";
+        });
+    }
+
+    window.addEventListener("click", function(event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
     });
 
     // 프로필 수정 폼 제출
