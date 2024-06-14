@@ -1,25 +1,38 @@
 document.addEventListener("DOMContentLoaded", function() {
     // 연락처 보기 모달
-    var showContactButton = document.querySelector("#show-contact");
-    var modal = document.querySelector("#contact-modal");
+    var contactButtons = document.querySelectorAll(".contact-btn");
+    var modal = document.querySelector("#contactModal");
+    var modalContent = document.querySelector(".modal-content");
     var closeModal = document.querySelector(".close");
 
-    if (showContactButton) {
-        showContactButton.addEventListener("click", function() {
-            modal.style.display = "block";
-        });
-    }
+    contactButtons.forEach(function(button) {
+        button.addEventListener("click", function() {
+            var userId = this.dataset.userId;
 
-    if (closeModal) {
-        closeModal.addEventListener("click", function() {
-            modal.style.display = "none";
-        });
-    }
+            fetch(`/users/${userId}/contact`)
+                .then(response => response.json())
+                .then(data => {
+                    modalContent.innerHTML = `
+                        <span class="close">&times;</span>
+                        <h2>Contact Information</h2>
+                        <p>Name: ${data.nick}</p>
+                        <p>Phone: ${data.contact}</p>
+                    `;
+                    modal.style.display = "block";
 
-    window.addEventListener("click", function(event) {
-        if (event.target === modal) {
-            modal.style.display = "none";
-        }
+                    var close = document.querySelector(".close");
+                    close.onclick = function() {
+                        modal.style.display = "none";
+                    }
+
+                    window.onclick = function(event) {
+                        if (event.target == modal) {
+                            modal.style.display = "none";
+                        }
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        });
     });
 
     // 프로필 수정 폼 제출
@@ -61,6 +74,11 @@ document.addEventListener("DOMContentLoaded", function() {
                     if (response.ok) {
                         button.classList.remove('liked');
                         button.textContent = '좋아요';
+                        // 관심목록 페이지에서 좋아요 취소 후 게시글 제거
+                        const postCard = document.querySelector(`.post-card[data-post-id="${postId}"]`);
+                        if (postCard) {
+                            postCard.remove();
+                        }
                     } else {
                         const errorData = await response.json();
                         alert(errorData.message || '좋아요 취소 처리에 실패했습니다.');
