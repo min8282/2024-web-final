@@ -13,7 +13,6 @@ dotenv.config();
 const pageRouter = require('./routes/page');
 const authRouter = require('./routes/auth');
 const postRouter = require('./routes/post'); // postRouter 추가
-const userRouter = require('./routes/user'); // userRouter 추가
 const { sequelize } = require('./models');
 const passportConfig = require('./passport'); // passport 설정
 
@@ -67,7 +66,6 @@ app.use(passport.session());
 app.use('/', pageRouter);
 app.use('/auth', authRouter);
 app.use('/post', postRouter); // postRouter 추가
-app.use('/user', userRouter); // userRouter 추가
 
 // 오류 처리: 요청 경로가 없을 경우
 app.use((req, res, next) => {
