@@ -8,6 +8,7 @@
     {% endfor %}
   </div>
   <div class="post-info">
+    <p><strong>제목:</strong> {{ post.title }}</p>
     <p><strong>작성자:</strong> {{ post.User.nick }}</p>
     <p><strong>위치:</strong> {{ post.location }}</p>
     <p><strong>가격(월):</strong> {{ post.price }} 원</p>
@@ -29,9 +30,9 @@
 
     {% if user and user.id == post.UserId %}
       <div class="post-actions">
-        <a href="/post/{{ post.id }}/edit" class="btn">수정하기</a>
+        <a href="/post/{{ post.id }}/edit" class="btn action-btn">게시글 수정</a>
         <form action="/post/{{ post.id }}/delete" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
-          <button type="submit" class="btn">삭제하기</button>
+          <button type="submit" class="btn delete-btn action-btn">게시글 삭제</button>
         </form>
       </div>
     {% endif %}
@@ -112,7 +113,13 @@
     gap: 10px;
     margin-top: 20px;
   }
-  .btn {
+  .post-actions {
+    display: flex;
+    gap: 10px;
+    line-height: 40px;
+    margin-top: 10px;
+  }
+  .btn, .action-btn {
     padding: 10px 20px;
     font-size: 1em;
     color: #fff;
@@ -120,14 +127,23 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
   }
-  .btn:hover {
+  .btn:hover, .action-btn:hover {
     background-color: #0056b3;
   }
   .like-button.liked {
     background-color: #dc3545;
   }
   .like-button.liked:hover {
+    background-color: #c82333;
+  }
+  .delete-btn {
+    background-color: #dc3545;
+  }
+  .delete-btn:hover {
     background-color: #c82333;
   }
   .modal {
@@ -159,14 +175,6 @@
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
-  }
-  .post-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-  }
-  .post-actions form {
-    display: inline-block;
   }
 </style>
 {% endblock %}
