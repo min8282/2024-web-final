@@ -25,17 +25,16 @@
           {% endif %}
         </button>
       {% endif %}
+    </div>
 
-      {% if user and user.id == post.UserId %}
+    {% if user and user.id == post.UserId %}
       <div class="post-actions">
         <a href="/post/{{ post.id }}/edit" class="btn">수정하기</a>
         <form action="/post/{{ post.id }}/delete" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
           <button type="submit" class="btn">삭제하기</button>
         </form>
       </div>
-      {% endif %}
-
-    </div>
+    {% endif %}
   </div>
 </div>
 
@@ -86,8 +85,8 @@
     margin-bottom: 20px;
   }
   .post-image {
-    width: 400px;
-    height: 400px;
+    width: 300px;
+    height: 300px;
     object-fit: cover;
     border-radius: 10px;
   }
@@ -160,6 +159,14 @@
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
+  }
+  .post-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .post-actions form {
+    display: inline-block;
   }
 </style>
 {% endblock %}
