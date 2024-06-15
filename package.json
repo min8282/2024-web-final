@@ -1,7 +1,7 @@
 {
-  "name": "nodebird",
+  "name": "2024-web-final",
   "version": "0.0.3",
-  "description": "익스프레스로 만드는 SNS 서비스",
+  "description": "2024년도 고급웹프로그래밍 기말과제 - 좌민서(60191691)",
   "main": "app.js",
   "scripts": {
     "start": "nodemon app"
