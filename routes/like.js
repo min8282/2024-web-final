@@ -4,6 +4,7 @@ const { Like, Post } = require('../models');
 
 const router = express.Router();
 
+// 게시글 좋아요 처리
 router.post('/:postId/like', isLoggedIn, async (req, res, next) => {
   try {
     const post = await Post.findOne({ where: { id: req.params.postId } });
@@ -23,6 +24,7 @@ router.post('/:postId/like', isLoggedIn, async (req, res, next) => {
   }
 });
 
+// 게시글 좋아요 취소 처리
 router.delete('/:postId/unlike', isLoggedIn, async (req, res, next) => {
   try {
     const post = await Post.findOne({ where: { id: req.params.postId } });

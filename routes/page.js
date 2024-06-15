@@ -12,10 +12,10 @@ router.use((req, res, next) => {
   next();
 });
 
-// 프로필 페이지 라우터
-router.get('/profile', isLoggedIn, (req, res) => {
-  res.render('profile', { title: '내 정보 - NodeBird' });
-});
+// // 프로필 페이지 라우터
+// router.get('/profile', isLoggedIn, (req, res) => {
+//   res.render('profile', { title: '내 정보 - NodeBird' });
+// });
 
 // 회원가입 페이지 라우터
 router.get('/join', isNotLoggedIn, (req, res) => {

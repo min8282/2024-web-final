@@ -133,7 +133,7 @@ router.post('/forgot-password', isNotLoggedIn, async (req, res, next) => {
     const mailOptions = {
       from: process.env.EMAIL,
       to: email,
-      subject: 'NodeBird 임시 비밀번호',
+      subject: 'JWA방 임시 비밀번호',
       text: `임시 비밀번호는 ${tempPassword} 입니다.`,
     };
 
@@ -143,7 +143,7 @@ router.post('/forgot-password', isNotLoggedIn, async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(tempPassword, 12);
     await User.update({ password: hashedPassword }, { where: { id: user.id } });
 
-    res.send('임시 비밀번호가 이메일로 전송되었습니다.');
+    res.send("<script>alert('임시 비밀번호가 이메일로 전송되었습니다.');location.href='/';</script>");
   } catch (error) {
     console.error(error);
     next(error);
