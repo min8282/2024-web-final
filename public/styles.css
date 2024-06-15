@@ -195,6 +195,9 @@ main {
   gap: 20px;
   justify-content: center;
 }
+.btn.post-btn {
+  width: 98%;
+}
 
 .post-card {
   width: 300px;
