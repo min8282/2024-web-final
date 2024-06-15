@@ -25,6 +25,16 @@
           {% endif %}
         </button>
       {% endif %}
+
+      {% if user and user.id == post.UserId %}
+      <div class="post-actions">
+        <a href="/post/{{ post.id }}/edit" class="btn">수정하기</a>
+        <form action="/post/{{ post.id }}/delete" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+          <button type="submit" class="btn">삭제하기</button>
+        </form>
+      </div>
+      {% endif %}
+
     </div>
   </div>
 </div>
