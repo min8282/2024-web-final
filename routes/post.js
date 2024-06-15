@@ -65,39 +65,6 @@ router.post('/', isLoggedIn, upload.array('images', 15), async (req, res, next) 
   }
 });
 
-// // 게시글 상세 페이지
-// router.get('/:id', async (req, res, next) => {
-//   try {
-//     const post = await Post.findOne({
-//       where: { id: req.params.id },
-//       include: {
-//         model: User,
-//         attributes: ['id', 'nick', 'email'],
-//       },
-//     });
-
-//     if (!post) {
-//       return res.status(404).send('게시글이 없습니다.');
-//     }
-
-//     const liked = req.user ? await Like.findOne({
-//       where: {
-//         UserId: req.user.id,
-//         PostId: req.params.id,
-//       },
-//     }) : null;
-
-//     res.render('post_detail', {
-//       title: post.title,
-//       post,
-//       imageUrls: JSON.parse(post.imageUrl),
-//       liked: !!liked,
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     next(error);
-//   }
-// });
 // 게시글 상세 페이지
 router.get('/:id', async (req, res, next) => {
   try {

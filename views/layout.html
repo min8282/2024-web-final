@@ -10,13 +10,14 @@
     <div class="header-container">
       <h1><a href="/">JWA방 - 방을 잡아!</a></h1>
       <nav>
-        <a href="/favorites">관심목록</a>
-        <a href="/post/new">방 내놓기</a>
         {% if user %}
+          <a href="/favorites">관심목록</a>
+          <a href="/post/new">방 내놓기</a>
           <a href="/auth/logout">로그아웃</a>
           <a href="/mypage">마이페이지</a>
         {% else %}
           <a href="/auth/login">로그인</a>
+          <a href="/join">회원가입</a>
         {% endif %}
       </nav>
     </div>
