@@ -1,11 +1,22 @@
 const express = require('express');
 const passport = require('passport');
 const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const User = require('../models/user');
 const Post = require('../models/post');
 
 const router = express.Router();
+
+// 노드메일러 설정
+const transporter = nodemailer.createTransport({
+  service: 'Gmail',
+  auth: {
+    user: process.env.EMAIL, // 자신의 Gmail 주소
+    pass: process.env.APP_PASSWORD, // 앱 비밀번호
+  },
+});
 
 // 회원가입 페이지 라우터
 router.get('/join', isNotLoggedIn, (req, res) => {
@@ -100,6 +111,45 @@ router.post('/delete', isLoggedIn, async (req, res, next) => {
   }
 });
 
+// 비밀번호 찾기 페이지 라우터
+router.get('/forgot-password', isNotLoggedIn, (req, res) => {
+  res.render('forgot_password', { title: '비밀번호 찾기' });
+});
+
+// 비밀번호 찾기 처리 라우터
+router.post('/forgot-password', isNotLoggedIn, async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      return res.status(404).send('해당 이메일로 등록된 사용자가 없습니다.');
+    }
+
+    // 임의의 번호 생성
+    const tempPassword = crypto.randomBytes(4).toString('hex');
+
+    // 이메일 발송
+    const mailOptions = {
+      from: process.env.EMAIL,
+      to: email,
+      subject: 'NodeBird 임시 비밀번호',
+      text: `임시 비밀번호는 ${tempPassword} 입니다.`,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    // 임시 비밀번호 저장 (암호화)
+    const hashedPassword = await bcrypt.hash(tempPassword, 12);
+    await User.update({ password: hashedPassword }, { where: { id: user.id } });
+
+    res.send('임시 비밀번호가 이메일로 전송되었습니다.');
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 // 카카오 로그인 라우터
 router.get('/kakao', passport.authenticate('kakao'));
 
@@ -109,6 +159,5 @@ router.get('/kakao/callback', passport.authenticate('kakao', {
 }), (req, res) => {
   res.redirect('/');
 });
-
 
 module.exports = router;
