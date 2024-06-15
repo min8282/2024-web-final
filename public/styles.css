@@ -138,7 +138,7 @@ main {
 
 .auth-container .btn-kakao {
   display: block;
-  width: 100%;
+  width: 95%;
   padding: 10px;
   background-color: #fee500;
   border: none;
@@ -296,7 +296,7 @@ main {
 
 .form-group input,
 .form-group textarea {
-  width: 100%;
+  width: 95%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
