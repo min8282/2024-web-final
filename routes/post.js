@@ -48,7 +48,7 @@ router.post('/', isLoggedIn, upload.array('images', 15), async (req, res, next) 
       UserId: req.user.id,
     });
 
-    // 파일명 설정
+    // 파일명 설정 (userid-이미지 순서)
     const imageUrls = req.files.map((file, index) => {
       const newFilename = `${post.id}-${index + 1}${path.extname(file.originalname)}`;
       fs.renameSync(file.path, path.join(file.destination, newFilename));

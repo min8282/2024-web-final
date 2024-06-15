@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 .catch(error => console.error('Error:', error));
         });
     } else {
-        console.error('One or more elements not found:', { contactButton, modal, modalContent, closeModal });
+        // console.error('One or more elements not found:', { contactButton, modal, modalContent, closeModal });
     }
 
     // 프로필 수정 폼 제출
