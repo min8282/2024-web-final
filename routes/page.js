@@ -53,7 +53,7 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-// 검색 기능 추가
+// 검색 기능
 router.get('/search', async (req, res, next) => {
   const query = req.query.query;
 
