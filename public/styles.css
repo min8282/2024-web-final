@@ -22,6 +22,11 @@ a:hover {
   padding: 20px;
 }
 
+/* favorite title */
+.favorite-title {
+  text-align: center;
+}
+
 /* Header */
 header {
   position: fixed;
@@ -196,6 +201,9 @@ main {
   justify-content: center;
 }
 .btn.post-btn {
+  width: 98%;
+}
+.btn.edit-post-btn {
   width: 98%;
 }
 
