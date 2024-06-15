@@ -1,6 +1,8 @@
 const express = require('express');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const { Post, User, Like } = require('../models');
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 const router = express.Router();
 
@@ -44,6 +46,50 @@ router.get('/', async (req, res, next) => {
     res.render('main', {
       title: 'NodeBird',
       posts: postsWithLikes,
+    });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+// 검색 기능 추가
+router.get('/search', async (req, res, next) => {
+  const query = req.query.query;
+
+  if (!query) {
+    return res.redirect('/');
+  }
+
+  try {
+    const posts = await Post.findAll({
+      where: {
+        [Op.or]: [
+          { title: { [Op.like]: `%${query}%` } },
+          { location: { [Op.like]: `%${query}%` } }
+        ]
+      },
+      include: {
+        model: User,
+        attributes: ['id', 'nick'],
+      },
+      order: [['createdAt', 'DESC']],
+    });
+
+    // 각 게시글의 좋아요 상태를 확인하여 템플릿으로 전달
+    const postsWithLikes = await Promise.all(posts.map(async post => {
+      const liked = req.user ? await Like.findOne({ where: { UserId: req.user.id, PostId: post.id } }) : null;
+      return {
+        ...post.get({ plain: true }),
+        imageUrl: post.imageUrl ? JSON.parse(post.imageUrl) : [],
+        liked: !!liked,
+      };
+    }));
+
+    res.render('main', {
+      title: '검색 결과 - NodeBird',
+      posts: postsWithLikes,
+      query,
     });
   } catch (err) {
     console.error(err);
