@@ -2,46 +2,35 @@
 
 {% block content %}
 <div class="post-detail-container">
-  <h1>{{ post.title }}</h1>
   <div class="post-images">
     {% for imageUrl in imageUrls %}
       <img src="{{ imageUrl }}" class="post-image" alt="{{ post.title }}">
     {% endfor %}
   </div>
   <div class="post-info">
-    <h2>가격정보</h2>
-    <p>가격: {{ post.price }}</p>
-    <h2>위치정보</h2>
-    <p>{{ post.location }}</p>
+    <p><strong>작성자:</strong> {{ post.User.nick }}</p>
+    <p><strong>위치:</strong> {{ post.location }}</p>
+    <p><strong>가격(월):</strong> {{ post.price }} 원</p>
     <h2>상세설명</h2>
     <p>{{ post.description }}</p>
-    <h2>작성자 정보</h2>
-    <p>{{ post.User.nick }}</p>
-    <button id="show-contact" class="contact-btn" data-user-id="{{ post.User.id }}">연락처 보기</button> <!-- 수정된 부분 -->
 
-    {% if user %}
-      <button class="like-button {% if liked %}liked{% endif %}" data-post-id="{{ post.id }}">
-        {% if liked %}
-          좋아요 취소
-        {% else %}
-          좋아요
-        {% endif %}
-      </button>
-    {% endif %}
-
-    {% if user and user.id == post.UserId %}
-      <div class="post-actions">
-        <a href="/post/{{ post.id }}/edit" class="btn">수정하기</a>
-        <form action="/post/{{ post.id }}/delete" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
-          <button type="submit" class="btn">삭제하기</button>
-        </form>
-      </div>
-    {% endif %}
+    <div class="buttons">
+      <button id="show-contact" class="btn">연락처 보기</button>
+      {% if user %}
+        <button class="like-button btn {% if liked %}liked{% endif %}" data-post-id="{{ post.id }}">
+          {% if liked %}
+            좋아요 취소
+          {% else %}
+            좋아요
+          {% endif %}
+        </button>
+      {% endif %}
+    </div>
   </div>
 </div>
 
 <!-- 연락처 보기 모달 -->
-<div id="contact-modal" class="modal">
+<div id="contactModal" class="modal">
   <div class="modal-content">
     <span class="close">&times;</span>
     <h2>연락처 정보</h2>
@@ -49,4 +38,118 @@
     <p id="contact-phone">연락처: {{ post.User.contact }}</p>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const contactButton = document.getElementById('show-contact');
+    const modal = document.getElementById('contactModal');
+    const closeModal = document.querySelector('.modal-content .close');
+
+    contactButton.onclick = function() {
+      modal.style.display = 'block';
+    };
+
+    closeModal.onclick = function() {
+      modal.style.display = 'none';
+    };
+
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = 'none';
+      }
+    };
+  });
+</script>
+
+<style>
+  .post-detail-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    margin: 0 auto;
+  }
+  .post-images {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  .post-image {
+    width: 400px;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+  .post-info {
+    text-align: left;
+    width: 100%;
+    max-width: 800px;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  .post-info p {
+    margin: 10px 0;
+    font-size: 1.1em;
+  }
+  .post-info h2 {
+    margin-top: 20px;
+    font-size: 1.4em;
+  }
+  .buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .btn {
+    padding: 10px 20px;
+    font-size: 1em;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .btn:hover {
+    background-color: #0056b3;
+  }
+  .like-button.liked {
+    background-color: #dc3545;
+  }
+  .like-button.liked:hover {
+    background-color: #c82333;
+  }
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+  }
+  .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    position: relative;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+  .modal-content .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+</style>
 {% endblock %}
