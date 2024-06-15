@@ -15,12 +15,12 @@
       </div>
 
       <div class="form-group">
-        <label for="price">가격 *</label>
+        <label for="price">임대료(월세) *</label>
         <input type="number" id="price" name="price" value="{{ post.price }}" required>
       </div>
 
       <div class="form-group">
-        <label for="location">위치 *</label>
+        <label for="location">주소 *</label>
         <input type="text" id="location" name="location" value="{{ post.location }}" required>
       </div>
 
@@ -34,7 +34,7 @@
         </div>
       </div>
 
-      <button type="submit" class="btn">수정 완료</button>
+      <button type="submit" class="btn edit-post-btn">수정 완료</button>
     </form>
   </div>
 {% endblock %}

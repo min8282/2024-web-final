@@ -13,7 +13,6 @@ dotenv.config();
 const pageRouter = require('./routes/page');
 const authRouter = require('./routes/auth');
 const postRouter = require('./routes/post'); // postRouter 추가
-const userRouter = require('./routes/user'); // userRouter 추가
 const { sequelize } = require('./models');
 const passportConfig = require('./passport'); // passport 설정
 
@@ -40,6 +39,10 @@ app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public'))); // 정적 파일 제공 설정
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // uploads 폴더 정적 파일로 제공
 
+//
+app.use('/js', express.static(path.join(__dirname, 'public/js'))); // script.js를 포함한 폴더 경로 설정
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
@@ -63,7 +66,6 @@ app.use(passport.session());
 app.use('/', pageRouter);
 app.use('/auth', authRouter);
 app.use('/post', postRouter); // postRouter 추가
-app.use('/user', userRouter); // userRouter 추가
 
 // 오류 처리: 요청 경로가 없을 경우
 app.use((req, res, next) => {

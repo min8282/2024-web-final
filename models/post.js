@@ -1,78 +1,43 @@
-// const Sequelize = require('sequelize');
-
-// class Post extends Sequelize.Model {
-//   static init(sequelize) {
-//     const postAttr = {
-//       content: {
-//         type: Sequelize.STRING(140),
-//         allowNull: false,
-//       },
-//     };
-
-//     const postTbl = {
-//       sequelize,
-//       timestamps: true,
-//       underscored: false,
-//       modelName: 'Post',
-//       tableName: 'posts',
-//       paranoid: false,
-//       charset: 'utf8mb4',
-//       collate: 'utf8mb4_general_ci',
-//     };
-
-//     return super.init(postAttr, postTbl);
-//   }
-
-//   static associate(db) {
-//     db.Post.belongsTo(db.User);
-//   }
-// }
-
-// module.exports = Post;
 const Sequelize = require('sequelize');
 
-class Post extends Sequelize.Model {
+module.exports = class Post extends Sequelize.Model {
   static init(sequelize) {
-    const postAttr = {
-      title: {
-        type: Sequelize.STRING(255),
+    return super.init({
+      title: { // 제목
+        type: Sequelize.STRING(100),
         allowNull: false,
       },
-      description: {
+      description: { // 상세 설명
         type: Sequelize.TEXT,
         allowNull: false,
       },
-      price: {
-        type: Sequelize.DECIMAL(10, 2),
+      price: { // 월세(가격)
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
-      location: {
-        type: Sequelize.STRING(255),
+      location: { // 위치
+        type: Sequelize.STRING(100),
         allowNull: false,
       },
-      imageUrl: {
-        type: Sequelize.STRING(255),
+      imageUrl: { // imageUrl
+        type: Sequelize.TEXT,
         allowNull: true,
-      }
-    };
-
-    const postTbl = {
+      },
+    }, {
       sequelize,
       timestamps: true,
-      underscored: false,
+      paranoid: true,
       modelName: 'Post',
       tableName: 'posts',
-      paranoid: false,
-      charset: 'utf8mb4',
-      collate: 'utf8mb4_general_ci',
-    };
-
-    return super.init(postAttr, postTbl);
+      charset: 'utf8',
+      collate: 'utf8_general_ci',
+    });
   }
 
   static associate(db) {
+    // Post:User = N:1
     db.Post.belongsTo(db.User);
+    // Post:User = N:M
+    db.Post.belongsToMany(db.User, { through: 'Like', as: 'LikedBy', foreignKey: 'PostId' });
   }
-}
-
-module.exports = Post;
+};

@@ -23,8 +23,39 @@
               <p>{{ post.description }}</p>
             </div>
           </a>
+          {% if user %}
+            <button class="like-button {% if post.liked %}liked{% endif %}" data-post-id="{{ post.id }}">
+              {% if post.liked %}
+                좋아요 취소
+              {% else %}
+                좋아요
+              {% endif %}
+            </button>
+          {% endif %}
         </div>
       {% endfor %}
     </div>
   </div>
+
+  <style>
+    .like-button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      text-align: center;
+      background-color: #f0f0f0;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .like-button.liked {
+      background-color: #ff6b6b;
+      color: #fff;
+    }
+
+    .like-button:hover {
+      background-color: #e0e0e0;
+    }
+  </style>
 {% endblock %}

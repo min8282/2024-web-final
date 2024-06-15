@@ -1,34 +1,31 @@
+const passport = require('passport');
 const KakaoStrategy = require('passport-kakao').Strategy;
 const User = require('../models/user');
 
-module.exports = new KakaoStrategy(
-  {
-    clientID: process.env.KAKAO_ID,
-    callbackURL: '/auth/kakao/callback',
-  },
-  async (accessToken, refreshToken, profile, done) => {
-    console.info('___new KakaoStrategy()');
-    console.log('___kakao profile', profile);
+module.exports = (passport) => {
+  passport.use(new KakaoStrategy({
+    clientID: process.env.KAKAO_ID, // Kakao Developers에서 발급받은 clientID
+    clientSecret: process.env.KAKAO_SECRET, // Kakao Developers에서 발급받은 clientSecret
+    callbackURL: '/auth/kakao/callback', // Kakao 로그인 후 리다이렉트 URL
+  }, async (accessToken, refreshToken, profile, done) => {
     try {
       const exUser = await User.findOne({
         where: { snsId: profile.id, provider: 'kakao' },
       });
       if (exUser) {
-        console.log('___kakao exUser', exUser);
         done(null, exUser);
       } else {
         const newUser = await User.create({
-          email: profile._json && profile._json.kakao_account.email,
+          email: profile._json.kaccount_email,
           nick: profile.displayName,
           snsId: profile.id,
           provider: 'kakao',
         });
-        console.log('___kakao newUser', newUser);
         done(null, newUser);
       }
     } catch (error) {
       console.error(error);
       done(error);
     }
-  }
-);
+  }));
+};

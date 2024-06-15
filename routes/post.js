@@ -6,6 +6,7 @@ const { v4: uuidv4 } = require('uuid');
 
 const Post = require('../models/post');
 const User = require('../models/user');
+const Like = require('../models/like');
 const { isLoggedIn } = require('./middlewares');
 
 const router = express.Router();
@@ -47,7 +48,7 @@ router.post('/', isLoggedIn, upload.array('images', 15), async (req, res, next) 
       UserId: req.user.id,
     });
 
-    // 파일명 설정
+    // 파일명 설정 (userid-이미지 순서)
     const imageUrls = req.files.map((file, index) => {
       const newFilename = `${post.id}-${index + 1}${path.extname(file.originalname)}`;
       fs.renameSync(file.path, path.join(file.destination, newFilename));
@@ -71,7 +72,7 @@ router.get('/:id', async (req, res, next) => {
       where: { id: req.params.id },
       include: {
         model: User,
-        attributes: ['id', 'nick', 'email'],
+        attributes: ['id', 'nick', 'contact'], // contact 속성 추가
       },
     });
 
@@ -79,16 +80,25 @@ router.get('/:id', async (req, res, next) => {
       return res.status(404).send('게시글이 없습니다.');
     }
 
+    const liked = await Like.findOne({
+      where: {
+        UserId: req.user ? req.user.id : null,
+        PostId: req.params.id,
+      },
+    });
+
     res.render('post_detail', {
       title: post.title,
       post,
       imageUrls: JSON.parse(post.imageUrl),
+      liked: !!liked,
     });
   } catch (error) {
     console.error(error);
     next(error);
   }
 });
+
 
 // 게시글 수정 페이지
 router.get('/:id/edit', isLoggedIn, async (req, res, next) => {
@@ -169,6 +179,65 @@ router.post('/:id/delete', isLoggedIn, async (req, res, next) => {
     await Post.destroy({ where: { id: req.params.id } });
 
     res.redirect('/');
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+// 좋아요 처리
+router.post('/:postId/like', isLoggedIn, async (req, res, next) => {
+  try {
+    const post = await Post.findOne({ where: { id: req.params.postId } });
+    if (!post) {
+      return res.status(404).send('게시글이 존재하지 않습니다.');
+    }
+
+    const [like, created] = await Like.findOrCreate({
+      where: {
+        UserId: req.user.id,
+        PostId: req.params.postId,
+      },
+    });
+
+    if (!created) {
+      return res.status(400).send('이미 좋아요를 눌렀습니다.');
+    }
+
+    res.send('success');
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+// 좋아요 취소 처리
+router.delete('/:postId/unlike', isLoggedIn, async (req, res, next) => {
+  try {
+    const post = await Post.findOne({ where: { id: req.params.postId } });
+    if (!post) {
+      return res.status(404).send('게시글이 존재하지 않습니다.');
+    }
+
+    const like = await Like.findOne({
+      where: {
+        UserId: req.user.id,
+        PostId: req.params.postId,
+      },
+    });
+
+    if (!like) {
+      return res.status(400).send('좋아요를 누르지 않았습니다.');
+    }
+
+    await Like.destroy({
+      where: {
+        UserId: req.user.id,
+        PostId: req.params.postId,
+      },
+    });
+
+    res.send('success');
   } catch (error) {
     console.error(error);
     next(error);
