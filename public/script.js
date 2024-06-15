@@ -1,12 +1,12 @@
 document.addEventListener("DOMContentLoaded", function() {
     // 연락처 보기 모달
-    var contactButtons = document.querySelectorAll(".contact-btn");
+    var contactButton = document.querySelector("#show-contact");
     var modal = document.querySelector("#contact-modal");
     var modalContent = document.querySelector(".modal-content");
     var closeModal = document.querySelector(".close");
 
-    contactButtons.forEach(function(button) {
-        button.addEventListener("click", function() {
+    if (contactButton && modal && modalContent && closeModal) {
+        contactButton.addEventListener("click", function() {
             var userId = this.dataset.userId;
 
             fetch(`/users/${userId}/contact`)
@@ -15,8 +15,8 @@ document.addEventListener("DOMContentLoaded", function() {
                     modalContent.innerHTML = `
                         <span class="close">&times;</span>
                         <h2>Contact Information</h2>
-                        <p>Name: ${data.nick}</p>
-                        <p>Phone: ${data.contact}</p>
+                        <p>이름: ${data.nick}</p>
+                        <p>연락처: ${data.contact}</p>
                     `;
                     modal.style.display = "block";
 
@@ -33,7 +33,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 })
                 .catch(error => console.error('Error:', error));
         });
-    });
+    } else {
+        console.error('One or more elements not found:', { contactButton, modal, modalContent, closeModal });
+    }
 
     // 프로필 수정 폼 제출
     const editProfileForm = document.querySelector('#edit-profile-form');

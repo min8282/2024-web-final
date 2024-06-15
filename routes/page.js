@@ -108,6 +108,20 @@ router.post('/delete', isLoggedIn, async (req, res, next) => {
   }
 });
 
+// 사용자 연락처 정보 라우터
+router.get('/users/:userId/contact', isLoggedIn, async (req, res, next) => {
+  try {
+    const user = await User.findOne({ where: { id: req.params.userId } });
+    if (!user) {
+      return res.status(404).json({ error: '사용자를 찾을 수 없습니다.' });
+    }
+    res.json({ nick: user.nick, contact: user.contact });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 // 관심 목록 페이지
 router.get('/favorites', isLoggedIn, async (req, res, next) => {
   try {
